@@ -1,5 +1,5 @@
 # Repository for SPJA exercises
-
+Points: https://docs.google.com/spreadsheets/d/1bCOGE8WP4ooAW2W9pjVEp24EOZYGkcGlk137Vy6zmwE/edit?usp=sharing
 
 ## Create a virtual environment
 ```bash
