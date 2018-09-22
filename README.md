@@ -1,10 +1,12 @@
 # Repository for SPJA exercises
 Points: https://docs.google.com/spreadsheets/d/1bCOGE8WP4ooAW2W9pjVEp24EOZYGkcGlk137Vy6zmwE/edit?usp=sharing
 
-## Create a virtual environment
+## Environment & tests setup
 ```bash
-$ python3 -m venv venv/spja
-$ source venv/spja/bin/activate
+$ python3 -m venv venv/spja     # create a virtual environment (run just once)
+$ source venv/spja/bin/activate # use virtual environment (run for every new terminal launch)
+(spja) $ pip install pytest     # install pytest library into venv
+(spja) $ pytest tests.py        # run tests from file `tests.py`
 ```
 
 ## Cheatsheets
