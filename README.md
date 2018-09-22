@@ -3,8 +3,7 @@ Points: https://docs.google.com/spreadsheets/d/1bCOGE8WP4ooAW2W9pjVEp24EOZYGkcGl
 
 ## Create a virtual environment
 ```bash
-$ mkdir venv
-$ python3 -m venv/spja
+$ python3 -m venv venv/spja
 $ source venv/spja/bin/activate
 ```
 
