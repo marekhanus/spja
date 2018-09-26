@@ -15,7 +15,6 @@ while <condition>:
 else:
     # this executes if the cycle didn't execute (works with for too)
 
-
 # Conditions
 if <bool>:
     ...
@@ -23,6 +22,12 @@ elif <bool>:
     ...
 else:
     ...
+
+if a and b: # logical AND
+    pass    # if there's no code, you have to write pass (it cannot be empty)
+
+if a or b:  # logical OR
+    pass
 
 1 if <condition> else 2 # ternary operator (condition ? 1 : 2)
 
