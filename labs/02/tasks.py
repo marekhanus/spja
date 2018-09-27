@@ -60,7 +60,16 @@ def lex_compare(a, b):
         lex_compare('ahoj', 'ahojky') == 'ahoj'
         lex_compare('dum', 'automobil') == 'automobil'
     """
-    pass
+    a_last = len(a) - 1
+    b_last = len(b) - 1
+
+    for i, v in enumerate(a):
+        if (i == a_last) or (v < b[i]):
+            return a
+        elif (i == b_last) or (v > b[i]):
+            return b
+
+    return ''
 
 
 def redact(data, chars):
