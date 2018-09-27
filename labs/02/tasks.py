@@ -81,7 +81,10 @@ def redact(data, chars):
         redact("Hello world!", "lo")        # Hexxx wxrxd!
         redact("Secret message", "mse")     # xxcrxt xxxxagx
     """
-    pass
+    for char in chars:
+        data.replace(char.lower(), 'x').replace(char.upper(), 'x')
+
+    return data
 
 
 def std_dev(data):
