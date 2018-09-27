@@ -7,7 +7,10 @@ def factorial(n):
         factorial(1) == 1
         factorial(5) == 120
     """
-    pass
+    if n > 1:
+        return n * factorial(n - 1)
+    else:
+        return 1
 
 
 def dot_product(a, b):
