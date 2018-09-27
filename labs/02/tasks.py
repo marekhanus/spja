@@ -23,7 +23,12 @@ def dot_product(a, b):
     Example:
         dot_product([1, 2, 3], [0, 3, 4]) == 1*0 + 2*3 + 3*4 == 18
     """
-    pass
+    res = 0
+
+    for i, v in enumerate(a):
+        res += a[i] * b[i]
+
+    return res
 
 
 def is_palindrome(data):
