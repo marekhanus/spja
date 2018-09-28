@@ -125,7 +125,18 @@ def count_words(data):
             'what': 1
         }
     """
-    pass
+    data_split = data.split(' ')
+    res = {}
+
+    for item in data_split:
+        if item == '':
+            pass
+        elif item in res:
+            res[item] = res.get(item) + 1
+        else:
+            res.update({item: 1})
+
+    return res
 
 
 def bonus_utf8(cp):
