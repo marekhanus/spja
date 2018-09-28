@@ -95,7 +95,13 @@ def std_dev(data):
     Equation: √(Σᵢ((xᵢ - x̅̅)²) / |data|)
     (sqrt(sum(square(xi - mean)) / len(data))
     """
-    pass
+    avg = sum(data) / len(data)
+    res = 0
+
+    for v in data:
+        res += pow(v - avg, 2)
+
+    return pow(res / len(data), 0.5)
 
 
 def count_words(data):
