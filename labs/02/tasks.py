@@ -146,5 +146,93 @@ def bonus_utf8(cp):
     Example:
         bonus_utf8(0x01) == [0x01]
         bonus_utf8(0x1F601) == [0xF0, 0x9F, 0x98, 0x81]
+
+    RFC 2279: http://www.faqs.org/rfcs/rfc2279.html
+
+    Bit count   UCS-4 range (hex.)  UTF-8 octet sequence (binary)
+    7 bit       0000 007F           0xxxxxxx
+    11 bit      0000 07FF           110xxxxx 10xxxxxx
+    16 bit      0000 FFFF           1110xxxx 10xxxxxx 10xxxxxx
+    21 bit      001F FFFF           11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+    26 bit      03FF FFFF           111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+    31 bit      7FFF FFFF           1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+                    |                  |         |        |        |        |        |
+    last position --                   |         |        |        |        |        |
+                                       |         |        |        |        |        |
+              leading sequence --------          --------------------------------------------- continuation sequences
+       7 bit: 00000000 => 0x0                                                                  10xxxxxx
+      11 bit: 11000000 => 0xC0                               For filtering only `x` positions: 00111111 => 0x3F
+      16 bit: 11100000 => 0xE0                                                Sequence prefix: 10000000 => 0x80
+      21 bit: 11110000 => 0xF0                                             Variable `x` count: 6        => 0x6
+      26 bit: 11111000 => 0xF8
+      31 bit: 11111100 => 0xFC
+
+                  U + 1    F    6    0    1
+                   0001 1111 0110 0000 0001
+
+    1111 0xxx | 10xx xxxx | 10xx xxxx | 10xx xxxx
+    1111 0000 | 1001 1111 | 1001 1000 | 1000 0001
+       F    0 |    9    F |    9    8 |    8    1
     """
-    pass
+
+    # last position x bit
+    last_pos_7bit = 0x7F
+    last_pos_11bit = 0x7FF
+    last_pos_16bit = 0xFFFF
+    last_pos_21bit = 0x1FFFFF
+    last_pos_26bit = 0x3FFFFFF
+    last_pos_31bit = 0x7FFFFFFF
+
+    # leading sequence x bit prefix
+    lead_seq_7bit_pref = 0x0
+    lead_seq_11bit_pref = 0xC0
+    lead_seq_16bit_pref = 0xE0
+    lead_seq_21bit_pref = 0xF0
+    lead_seq_26bit_pref = 0xF8
+    lead_seq_31bit_pref = 0xFC
+
+    # continuation sequence
+    cont_seq_filter = 0x3F
+    cont_seq_pref = 0x80
+    cont_seq_shift = 0x6
+
+    if cp <= last_pos_7bit:
+        return [
+            (cp >> 0 * cont_seq_shift) + lead_seq_7bit_pref,
+        ]
+    elif cp <= last_pos_11bit:
+        return [
+            (cp >> 1 * cont_seq_shift) + lead_seq_11bit_pref,
+            (cp >> 0 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+        ]
+    elif cp <= last_pos_16bit:
+        return [
+            (cp >> 2 * cont_seq_shift) + lead_seq_16bit_pref,
+            (cp >> 1 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 0 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+        ]
+    elif cp <= last_pos_21bit:
+        return [
+            (cp >> 3 * cont_seq_shift) + lead_seq_21bit_pref,
+            (cp >> 2 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 1 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 0 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+        ]
+    elif cp <= last_pos_26bit:
+        return [
+            (cp >> 4 * cont_seq_shift) + lead_seq_26bit_pref,
+            (cp >> 3 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 2 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 1 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 0 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+        ]
+    elif cp <= last_pos_31bit:
+        return [
+            (cp >> 5 * cont_seq_shift) + lead_seq_31bit_pref,
+            (cp >> 4 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 3 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 2 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 1 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+            (cp >> 0 * cont_seq_shift & cont_seq_filter) + cont_seq_pref,
+        ]
+    return None
