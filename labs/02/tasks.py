@@ -40,7 +40,8 @@ def is_palindrome(data):
     Example:
         is_palindrome('aba') == True
         is_palindrome('abc') == False
-    """
+
+    Older version:
     last = len(data) - 1
 
     for i, v in enumerate(data):
@@ -48,6 +49,8 @@ def is_palindrome(data):
             return False
 
     return True
+    """
+    return data == data[::-1]
 
 
 def lex_compare(a, b):
