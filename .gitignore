@@ -138,3 +138,6 @@ pip-selfcheck.json
 
 
 # End of https://www.gitignore.io/api/python,visualstudiocode
+
+### PyCharm ###
+.idea/
