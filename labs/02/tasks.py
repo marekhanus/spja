@@ -167,12 +167,12 @@ def bonus_utf8(cp):
       26 bit: 11111000 => 0xF8
       31 bit: 11111100 => 0xFC
 
-                  U + 1    F    6    0    1
-                   0001 1111 0110 0000 0001
+    Input: U + 1    F    6    0    1
+            0001 1111 0110 0000 0001
 
-    1111 0xxx | 10xx xxxx | 10xx xxxx | 10xx xxxx
-    1111 0000 | 1001 1111 | 1001 1000 | 1000 0001
-       F    0 |    9    F |    9    8 |    8    1
+              1111 0xxx |   10xx xxxx |   10xx xxxx |   10xx xxxx
+              1111 0000 |   1001 1111 |   1001 1000 |   1000 0001
+    Output: 0x   F    0 | 0x   9    F | 0x   9    8 | 0x   8    1
     """
 
     # last position x bit
