@@ -82,7 +82,7 @@ def redact(data, chars):
         redact("Secret message", "mse")     # xxcrxt xxxxagx
     """
     for char in chars:
-        data.replace(char.lower(), 'x').replace(char.upper(), 'x')
+        data = data.replace(char.lower(), 'x').replace(char.upper(), 'x')
 
     return data
 
