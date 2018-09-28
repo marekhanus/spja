@@ -81,3 +81,9 @@ def test_bonus_utf8():
     assert bytes(bonus_utf8(ord('č'))).decode('utf-8') == 'č'
     assert bytes(bonus_utf8(ord('⤴'))).decode('utf-8') == '⤴'
     assert bytes(bonus_utf8(ord('😁'))).decode('utf-8') == '😁'
+
+
+def test_bonus_utf8_extra():
+    table = range(0, 0xD800)
+    for v in table:
+        assert bytes(bonus_utf8(ord(chr(v)))).decode('utf-8') == chr(v)
