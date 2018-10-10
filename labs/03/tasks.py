@@ -62,7 +62,7 @@ def sort_file(source, target):
     return 'ok'
 
 
-def incrementor(n):
+def incrementor(n=1):
     """
     0.5 point
     Return a function that will add `n` to its parameter.
@@ -75,7 +75,7 @@ def incrementor(n):
         inc = incrementor()
         inc(2) # 3
     """
-    pass
+    return lambda x: n + x
 
 
 def fibonacci_closure():
