@@ -45,7 +45,21 @@ def sort_file(source, target):
         dceb
         fff
     """
-    pass
+    try:
+        with open(source, 'r') as f:
+            lines = f.read()
+
+        lines_sorted = sorted(lines.split('\n'))
+
+        with open(target, 'r+') as f:
+            f.write('\n'.join(lines_sorted))
+            f.flush()
+    except FileNotFoundError:
+        return 'file not found'
+    except:
+        return 'error'
+
+    return 'ok'
 
 
 def incrementor(n):
