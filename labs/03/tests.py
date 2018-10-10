@@ -4,7 +4,7 @@ from collections import deque
 
 import pytest
 
-from tests import (bonus_tree_walker, cached, fibonacci_closure,
+from tasks import (bonus_tree_walker, cached, fibonacci_closure,
                    fibonacci_generator, filter_file, incrementor, sort_file)
 
 
