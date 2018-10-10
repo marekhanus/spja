@@ -12,7 +12,14 @@ def filter_file(path, keyword):
         is this your car?
         no, this is Patrick
     """
-    pass
+    res = []
+
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            if keyword in line:
+                res.append(line.strip())
+
+    return res
 
 
 def sort_file(source, target):
