@@ -90,7 +90,8 @@ def fibonacci_closure():
         g() # 3
         ...
     """
-    pass
+    x = fibonacci_generator()
+    return lambda: next(x)
 
 
 def fibonacci_generator():
