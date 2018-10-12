@@ -1,6 +1,8 @@
 # Repository for SPJA exercises
 Points: https://docs.google.com/spreadsheets/d/1bCOGE8WP4ooAW2W9pjVEp24EOZYGkcGlk137Vy6zmwE/edit?usp=sharing
 
+Slack: http://spja-vsb.slack.com
+
 ## Environment & tests setup
 ```bash
 $ python3 -m venv venv/spja     # create a virtual environment (run just once)
