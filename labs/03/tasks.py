@@ -160,4 +160,33 @@ def bonus_tree_walker(tree, order):
         list(bonus_tree_walker(tree, 'preorder')) == [5, 3, 8, 4, 1]
         list(bonus_tree_walker(tree, 'postorder')) == [8, 4, 3, 1, 5]
     """
-    pass
+    res = []
+
+    def inorder(subtree) -> None:
+        for i in subtree:
+            if type(i) is tuple:
+                inorder(i)
+            elif i is not None:
+                res.append(i)
+
+    def preorder(subtree) -> None:
+        res.append(subtree[1])
+
+        if subtree[0] is not None:
+            preorder(subtree[0])
+
+        if subtree[2] is not None:
+            preorder(subtree[2])
+
+    def postorder(subtree) -> None:
+        if subtree[0] is not None:
+            postorder(subtree[0])
+
+        if subtree[2] is not None:
+            postorder(subtree[2])
+
+        res.append(subtree[1])
+
+    locals()[order](tree)
+
+    return res
