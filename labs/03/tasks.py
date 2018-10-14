@@ -129,7 +129,17 @@ def cached(f):
         fn(3) == 4 # computed
         fn(1) == 2 # computed
     """
-    pass
+    cached_arg = cached_res = 0
+
+    def drake(arg):
+        nonlocal cached_arg, cached_res
+
+        if arg != cached_arg:
+            cached_arg, cached_res = arg, f(arg)
+
+        return cached_res
+
+    return drake
 
 
 def bonus_tree_walker(tree, order):
