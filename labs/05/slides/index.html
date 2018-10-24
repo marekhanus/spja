@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h3>Python: games</h3>
+      </section>
+      <section>
+        <h3>pygame framework</h3>
+        <pre><code class="bash" data-trim>
+          $ pip install pygame
+        </code></pre>
+      </section>
+      <section>
+        <section>
+          <p>Game loop</p>
+          <pre><code class="python" data-trim data-noescape>
+            <span class="fragment">while True:</span>
+              <span class="fragment"># are some keys pressed? has the mouse moved?
+              handle_input(keys, mouse)</span>
+              <span class="fragment">
+              # move objects, check collisions, update physics
+              for obj in objects:
+                obj.update(delta)
+              </span><span class="fragment">
+              # render graphics to screen
+              for obj in objects:
+                obj.draw(screen)</span>
+          </code></pre>
+        </section>
+        <section>
+          <p>What is delta?</p>
+          <pre class="fragment"><code class="python" data-trim data-noescape>
+            x += speed * delta
+            <span class="fragment"># frame took 1/60 s -> small movement</span>
+            <span class="fragment"># frame took 1 s -> large movement</span>
+          </code></pre>
+          <ul>
+            <li class="fragment">adjustment for computer speed</li>
+            <li class="fragment">usually capped at 60 FPS</li>
+          </ul>
+        </section>
+      </section>
+      <section>
+        <p>Rectangle</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">pos = (1, 1)  # points are represented as tuple (x, y)</span>
+          <span class="fragment">size = (30, 30)</span>
+          <span class="fragment">r = pygame.Rect(pos, size)</span>
+          <span class="fragment">r.center = (50, 60)    # sets center to (50, 60)</span>
+          <span class="fragment">moved = r.move(50, 30) # new rectangle at (x + 50, y + 30)</span>
+        </code></pre>
+      </section>
+      <section>
+        <p>Drawing image to screen</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">image = load_image('images/enemy1.gif')</span>
+          <span class="fragment">rect = image.get_rect() # image rectangle</span>
+          <span class="fragment">rect.center = (30, 30)  # change position</span>
+          <span class="fragment">
+          def draw(self, screen):
+            screen.blit(image, rect)</span>
+        </code></pre>
+      </section>
+      <section>
+        <p>Object collections</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">enemy = Enemy((50, 50))  # inherits from pygame.sprite.Sprite</span>
+          <span class="fragment">enemies = pygame.sprite.Group()  # list of game objects</span>
+          <span class="fragment">enemies.add(enemy)</span>
+
+          <span class="fragment">enemies.update(p1, ...)  # update(p1, ...) on all enemies</span>
+          <span class="fragment">enemies.draw(p1, ...)  # draw(p1, ...) on all enemies</span>
+
+          <span class="fragment">len(enemies)  # 1</span>
+          <span class="fragment">enemy.kill()  # remove enemy from all collections</span>
+          <span class="fragment">len(enemies)  # 0</span>
+        </code></pre>
+      </section>
+      <section>
+        <p>Testing collisions</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">cols = pygame.sprite.spritecollide(player, enemies, False)
+          # `cols` now contains `enemies` that collide with `player`</span>
+          <span class="fragment">if len(cols) > 0:
+            for item in cols:
+              item.kill()</span>
+        </code></pre>
+      </section>
+      <section>
+        <p>Cooldown</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">cd = Cooldown(500) # CD for 500 ms</span>
+          <span class="fragment">
+          def update(self, engine, delta):
+            cd.update(delta)
+            if cd.reset_if_ready():
+              # fire in the hole!
+          </span>
+        </code></pre>
+      </section>
+      <section>
+        <p>Pseudo-random generator</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">import random</span>
+          <span class="fragment">r = random.Random()</span>
+          <span class="fragment">r.random()           # random number between in range (0, 1)</span>
+          <span class="fragment">r.randint(3, 5)      # random number in range [3, 5]</span>
+          <span class="fragment">r.choice([1, 2, 3])  # randomly selects an item from iterable</span>
+        </code></pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+      ]
+    });
+  </script>
+</body>
+
+</html>
