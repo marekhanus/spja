@@ -121,7 +121,7 @@ class Missile(GameObject):
         TODO:
         When missile hits enemy, kill missile and reduce enemy HP by self.damage.
         If enemy HP will be <= 0, kill the enemy and increase player score by enemy.score.
-        TODO: when enemy moves out of the window, kill enemy and reduce player HP
+        TODO: when missile moves out of the window, kill it
         """
         pass
 
