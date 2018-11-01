@@ -190,3 +190,32 @@ def bonus_tree_walker(tree, order):
     locals()[order](tree)
 
     return res
+
+
+def bonus_tree_walker_yield(tree, order):
+    def inorder(subtree) -> None:
+        for i in subtree:
+            if type(i) is tuple:
+                yield from inorder(i)
+            elif i is not None:
+                yield i
+
+    def preorder(subtree) -> None:
+        yield subtree[1]
+
+        if subtree[0] is not None:
+            yield from preorder(subtree[0])
+
+        if subtree[2] is not None:
+            yield from preorder(subtree[2])
+
+    def postorder(subtree) -> None:
+        if subtree[0] is not None:
+            yield from postorder(subtree[0])
+
+        if subtree[2] is not None:
+            yield from postorder(subtree[2])
+
+        yield subtree[1]
+
+    return locals()[order](tree)
