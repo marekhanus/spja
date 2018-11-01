@@ -4,7 +4,7 @@ from collections import deque
 
 import pytest
 
-from tasks import (bonus_tree_walker, cached, fibonacci_closure,
+from tasks import (bonus_tree_walker, bonus_tree_walker_yield, cached, fibonacci_closure,
                    fibonacci_generator, filter_file, incrementor, sort_file)
 
 
@@ -119,3 +119,17 @@ def test_bonus_tree_walker():
     assert list(bonus_tree_walker(tree, 'inorder')) == [1, 2, 3, 4, 5, 6, 7, 9, 8]
     assert list(bonus_tree_walker(tree, 'preorder')) == [6, 2, 1, 4, 3, 5, 7, 8, 9]
     assert list(bonus_tree_walker(tree, 'postorder')) == [1, 3, 5, 4, 2, 9, 8, 7, 6]
+
+
+def test_bonus_tree_walker_yield():
+    tree = (((None, 8, None), 3, (None, 4, None)), 5, (None, 1, None))
+    assert list(bonus_tree_walker_yield(tree, 'inorder')) == [8, 3, 4, 5, 1]
+    assert list(bonus_tree_walker_yield(tree, 'preorder')) == [5, 3, 8, 4, 1]
+    assert list(bonus_tree_walker_yield(tree, 'postorder')) == [8, 4, 3, 1, 5]
+
+    assert list(bonus_tree_walker_yield((None, 1, None), 'postorder')) == [1]
+
+    tree = (((None, 1, None), 2, ((None, 3, None), 4, (None, 5, None))), 6, (None, 7, ((None, 9, None), 8, None)))
+    assert list(bonus_tree_walker_yield(tree, 'inorder')) == [1, 2, 3, 4, 5, 6, 7, 9, 8]
+    assert list(bonus_tree_walker_yield(tree, 'preorder')) == [6, 2, 1, 4, 3, 5, 7, 8, 9]
+    assert list(bonus_tree_walker_yield(tree, 'postorder')) == [1, 3, 5, 4, 2, 9, 8, 7, 6]
