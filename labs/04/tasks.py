@@ -171,6 +171,10 @@ class Vector:
         for x in v:
             print(x) # prints 1, 2, 3
     """
+    def __iter__(self):
+        yield self.x
+        yield self.y
+        yield self.z
 
 
 class LowerCaseDecorator:
