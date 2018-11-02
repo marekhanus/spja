@@ -120,6 +120,8 @@ class Vector:
         str(Vector(1, 2, 3))    # (1, 2, 3)
         print(Vector(0, 0, 0))  # (0, 0, 0)
     """
+    def __str__(self):
+        return "({}, {}, {})".format(self.x, self.y, self.z)
 
     """
     Implement indexing for the vector, both for reading and writing.
