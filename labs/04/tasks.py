@@ -89,6 +89,14 @@ class Vector:
         Vector(1, 1, 1) == Vector(2, 1, 1)  # False
         Vector(1, 2, 3) == 5                # False
     """
+    def __eq__(self, other):
+        if not isinstance(other, Vector):
+            return False
+
+        if self.x != other.x or self.y != other.y or self.z != other.z:
+            return False
+
+        return True
 
     """
     Implement *property* `unit` that will return the unit vector of this vector
