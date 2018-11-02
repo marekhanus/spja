@@ -15,6 +15,10 @@ class Vector:
         v.x # 1.2
         v = Vector(z=1) # == Vector(0, 0, 1)
     """
+    def __init__(self, x=0.0, y=0.0, z=0.0):
+        self.x = x
+        self.y = y
+        self.z = z
 
     """
     Implement method `length` that returns the length of the vector
