@@ -135,6 +135,7 @@ class Vector:
         v[10] # raises IndexError
     """
     def __setitem__(self, key, value):
+        """
         if key == 0:
             self.x = value
         elif key == 1:
@@ -143,8 +144,12 @@ class Vector:
             self.z = value
         else:
             raise IndexError
+        """
+        keys = ['x', 'y', 'z']
+        setattr(self, keys[key], value)
 
     def __getitem__(self, key):
+        """
         if key == 0:
             return self.x
         elif key == 1:
@@ -153,6 +158,9 @@ class Vector:
             return self.z
         else:
             raise IndexError
+        """
+        keys = ['x', 'y', 'z']
+        return getattr(self, keys[key])
 
     """
     Implement the iterator protocol for the vector.
