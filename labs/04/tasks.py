@@ -105,6 +105,14 @@ class Vector:
     Example:
         Vector(0, 8, 0).unit # Vector(0, 1, 0)
     """
+    @property
+    def unit(self):
+        length = self.length()
+
+        if length == 0:
+            return Vector(0.0, 0.0, 0.0)
+
+        return self / length
 
     """
     Implement string representation of Vector in the form `(x, y, z)`.
