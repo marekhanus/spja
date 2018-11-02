@@ -71,6 +71,15 @@ class Vector:
     Hint:
         Division with the `/` operator uses the magic method `__truediv__` in Python 3.
     """
+    def __mul__(self, other: float):
+        if not isinstance(other, int) and not isinstance(other, float):
+            raise ValueError
+        return Vector(self.x * other, self.y * other, self.z * other)
+
+    def __truediv__(self, other: float):
+        if not isinstance(other, int) and not isinstance(other, float):
+            raise ValueError
+        return Vector(self.x / other, self.y / other, self.z / other)
 
     """
     Implement the `==` comparison operator for Vector that returns True if both vectors have the same attributes.
