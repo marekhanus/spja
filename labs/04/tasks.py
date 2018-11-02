@@ -58,6 +58,8 @@ class Vector:
     Example:
         -Vector(1, 2, 3) # Vector(-1, -2, -3)
     """
+    def __neg__(self):
+        return Vector(- self.x, - self.y, - self.z)
 
     """
     Implement multiplication and division by scalar using `*` and `/` operators.
