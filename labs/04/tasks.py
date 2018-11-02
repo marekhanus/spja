@@ -1,3 +1,6 @@
+import math
+
+
 class Vector:
     """
     Implement the methods below to create an immutable 3D vector class.
@@ -26,6 +29,8 @@ class Vector:
     Example:
         Vector(2, 3, 4).length() # 5.38...
     """
+    def length(self):
+        return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
 
     """
     Implement vector addition and subtraction using `+` and `-` operators.
