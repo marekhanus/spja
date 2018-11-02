@@ -42,6 +42,15 @@ class Vector:
     Hint:
         You can use isinstance(object, class) to check whether `object` is an instance of `class`.
     """
+    def __add__(self, other):
+        if not isinstance(other, Vector):
+            raise ValueError
+        return Vector(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        if not isinstance(other, Vector):
+            raise ValueError
+        return Vector(self.x - other.x, self.y - other.y, self.z - other.z)
 
     """
     Implement vector negation using the unary `-` operator.
