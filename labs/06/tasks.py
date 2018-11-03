@@ -2,6 +2,7 @@ import json
 import os
 import re
 from urllib.parse import urlencode
+from datetime import datetime
 
 import requests
 
@@ -40,7 +41,7 @@ def send_tweet(status):
     return res
 
 
-def what_guido_says(since, until, keyword):
+def what_guido_says(since, until, keyword, account='gvanrossum'):
     """
     2 points.
     Return a list of tweets originating from the Twitter account 'gvanrossum'
@@ -56,7 +57,40 @@ def what_guido_says(since, until, keyword):
         what_guido_says('2018-10-20', '2018-10-25', 'Python')
         # [('blabla', False), ('RT: blablabla', True)]
     """
-    pass
+    client = create_client()
+    url = API_URL + 'statuses/user_timeline.json?' + urlencode({'screen_name': account})
+    res, data = client.request(
+        url,
+        method="GET", headers={
+            "content-type": "application/json"
+        })
+    assert res['status'] == '200'
+
+    tweets = json.loads(data)
+
+    ret = []
+
+    for tweet in tweets:
+        created_at = tweet.get('created_at')
+
+        since_timestamp = datetime.strptime(since, '%Y-%m-%d').timestamp()
+        until_timestamp = datetime.strptime(until, '%Y-%m-%d').timestamp()
+        created_at_timestamp = datetime.strptime(created_at, '%a %b %d %H:%M:%S %z %Y').timestamp()
+
+        text = text_for_search = tweet.get('text')
+        is_retweet = None is not tweet.get('retweeted_status')
+
+        for i in tweet.get('entities'):
+            if i == 'urls':
+                for j in tweet.get('entities')[i]:
+                    text_for_search = text.replace(j['url'], j['expanded_url'])
+
+        if (since_timestamp <= created_at_timestamp) and \
+                (created_at_timestamp <= until_timestamp) and \
+                (keyword.lower() in text_for_search.lower()):
+            ret.append((text, is_retweet))
+
+    return ret
 
 
 def scrape_images(url):
