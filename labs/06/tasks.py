@@ -29,7 +29,15 @@ def send_tweet(status):
         res = send_tweet('Hello!')
         assert int(res['status']) == 2OO
     """
-    pass
+    client = create_client()
+    url = API_URL + 'statuses/update.json?' + urlencode({'status': status})
+    res, data = client.request(
+        url,
+        method="POST", headers={
+            "content-type": "application/json"
+        })
+    assert res['status'] == '200'
+    return res
 
 
 def what_guido_says(since, until, keyword):
