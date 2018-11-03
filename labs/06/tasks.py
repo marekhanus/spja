@@ -112,7 +112,17 @@ def scrape_images(url):
         or use the MechanicalSoup (https://mechanicalsoup.readthedocs.io/en/stable/tutorial.html)
         library to extract images from the page.
     """
-    pass
+    res = requests.get(url)
+    assert res.status_code == 200
+
+    regex = re.compile('<img (?:(?:.|\n)*?)src="(.*?([^/]*?))"[\s/]*>')
+    matches = regex.findall(res.text)
+    for image_with_relative_url, image_file_name in matches:
+        res_image = requests.get(url + image_with_relative_url)
+        assert res.status_code == 200
+
+        with open(image_file_name, 'wb') as f:
+            f.write(res_image.content)
 
 
 def bonus_catzz():
