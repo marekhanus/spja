@@ -25,7 +25,7 @@ if __name__ == "__main__":
         - if client disconnects, print "Exited connection from: <client-address>"
     
     Example:
-        $ python3 5555
+        $ python3 server.py 5555
         Received connection from: 127.0.0.1:55657
         Input: 5+5, output: 10
         Input: 2 * 13, output: 26
