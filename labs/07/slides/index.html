@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h3>TCP/IP &amp; threads</h3>
+      </section>
+      <section>
+        <h4>TCP (Transmission Control Protocol)</h4>
+        <ul>
+          <li class="fragment">Network communication protocol</li>
+          <li class="fragment">Uses IP addresses for addressing (IPv4 and IPv6)</li>
+          <li class="fragment">Stream based</li>
+          <li class="fragment">Reliable:</li>
+          <ul>
+            <li class="fragment">Messages cannot be reordered</li>
+            <li class="fragment">Messages are delivered exactly once</li>
+          </ul>
+        </ul>
+      </section>
+      <section>
+        <section>
+          <h4>Socket</h4>
+          <p>Abstraction of one endpoint of a comm. channel</p>
+          <ul>
+            <li class="fragment"><b>bind(address, port)</b> - assigns socket to an address</li>
+            <li class="fragment"><b>listen()</b> - starts listening for client connections</li>
+            <li class="fragment"><b>accept()</b> - accept client connection</li>
+            <li class="fragment"><b>connect(address, port)</b> - connect to an address</li>
+            <li class="fragment"><b>sendall(data)</b> - send data</li>
+            <li class="fragment"><b>recv(size)</b> - receive at most <b>size</b> bytes</li>
+            <li class="fragment"><b>close()</b> - end the communication</li>
+          </ul>
+        </section>
+        <section>
+          <p>Server workflow</p>
+          <pre><code class="python" data-trim data-noescape>
+            <span class="fragment">sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+            <span class="fragment">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span>
+            <span class="fragment">sock.bind(('127.0.0.1', 5555)) # assign to address</span>
+            <span class="fragment">sock.listen() # start listening</span>
+            <span class="fragment">client, addr = sock.accept() # accept client</span>
+            <span class="fragment">client.sendall(b"hello")</span>
+            <span class="fragment">data = client.recv(512)</span>
+          </code></pre>
+        </section>
+        <section>
+          <p>Client workflow</p>
+          <pre><code class="python" data-trim data-noescape>
+            <span class="fragment">client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
+            <span class="fragment">sock.connect(('127.0.0.1', 5555)) # connect to server</span>
+            <span class="fragment">client.sendall(b"hello")</span>
+            <span class="fragment">data = client.recv(512)</span>
+            <span class="fragment">client.close() # close connection</span>
+          </code></pre>
+        </section>
+      </section>
+      <section>
+        <section>
+          <p>Gotchas</p>
+          <p>Stream based</p>
+          <pre><code class="python" data-trim data-noescape>
+            # Client
+            client.sendall("msg1\n")
+            client.sendall("msg2\n")
+            client.sendall("msg3\n")
+            <span class="fragment">
+            # Server
+            data = sock.recv(512)
+            # data may be b"msg1\nmsg2\nmsg3\n"</span>
+            <span class="fragment"># but also b"ms", b"msg1", ...</span>
+            <span class="fragment"># => you have to delimit messages by yourself</span>
+          </code></pre>
+        </section>
+        <section>
+          <p>How to recognize disconnect</p>
+          <pre><code class="python" data-trim data-noescape>
+            data = sock.recv(512)
+            if data == 0:
+              # error during transmission, disconnect
+          </code></pre>
+        </section>
+        <section>
+          <p>Operations are blocking by default</p>
+          <pre><code class="python" data-trim data-noescape>
+            sock.accept()         # blocks until a client connects
+            sock.sendall(b"...")  # blocks until all data is sent
+            sock.recv(512)        # blocks until (some) data is received
+          </code></pre>
+        </section>
+        <section>
+          <p>Encoding</p>
+          <ul>
+            <li class="fragment">Sockets work with bytes, not strings</li>
+            <li class="fragment">Before sending a string, you have to encode it</li>
+            <li class="fragment">After receiving a string, you have to decode it</li>
+          </ul>
+          <pre class="fragment"><code class="python" data-trim data-noescape>
+            <span class="fragment">msg = "Hello world!\n"</span>
+            <span class="fragment">sock.sendall(msg.encode()) # by default uses UTF-8</span>
+            <span class="fragment"># or you can use bytes literal
+            sock.sendall(b"Hello world\n")</span>
+
+            <span class="fragment">byte_data = sock.recv(512)</span>
+            <span class="fragment">string = byte_data.decode()</span>
+          </code></pre>
+        </section>
+      </section>
+      <section>
+        <h4>Threads</h4>
+        <ul>
+          <li class="fragment">Unit of scheduling</li>
+          <li class="fragment">Registers + memory address space</li>
+        </ul>
+
+        <p class="fragment">Useful for:</p>
+        <ul>
+          <li class="fragment">Concurrency</li>
+          <li class="fragment">Parallelism</li>
+        </ul>
+      </section>
+      <section>
+        <section>
+          <h4>Threads in Python</h4>
+          <ul>
+            <li class="fragment">Only one thread may execute at any given time</li>
+            <li class="fragment">Interpreter is locked by GIL (global interpreter lock)</li>
+            <li class="fragment">Concurrency ✓</li>
+            <li class="fragment">Parallelism ×</li>
+            <li class="fragment">You have to use processes to get parallelism</li>
+          </ul>
+        </section>
+        <section>
+          <h4>Using threads</h4>
+          <pre class="fragment"><code class="python" data-trim data-noescape>
+            def fun(num):
+              for _ in range(5):
+                print("Thread {}".format(num))
+
+            <span class="fragment">import threading
+            threads = []</span>
+            <span class="fragment">for i in range(3):</span>
+              <span class="fragment">t = threading.Thread(target=fun, args=(i, ))</span>
+              <span class="fragment">t.start()
+              threads.append(t)</span>
+            <span class="fragment">
+            for t in threads:
+              t.join() # block until thread ends
+            </span>
+          </code></pre>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+      ]
+    });
+  </script>
+</body>
+</html>
