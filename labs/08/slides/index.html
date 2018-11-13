@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h3>Graphs &amp; shortest paths</h3>
+      </section>
+      <section>
+        <section>
+          <p>Graph is a collection of things (vertices) that have relationships between them (edges).</p>
+          <img class="stretch" src="images/graph.svg" />
+        </section>
+        <section>
+          <h4>Graphs are super useful, because they represent many practical problems:</h4>
+          <ul style="font-size: 0.75em;">
+            <li>Maps (vertex = city, edge = road)</li>
+            <ul>
+              <li>How can I get from Ostrava to Brno quickly? (GPS navigation)</li>
+            </ul>
+            <li>Social networks (vertex = person, edge = friend/follower)</li>
+            <ul>
+              <li>Who's the most popular kid on the block?</li>
+            </ul>
+            <li>Computer networks (vertex = router, edge = Ethernet cable)</li>
+            <ul>
+              <li>Which path to choose for a packet from Czech Republic to USA?</li>
+            </ul>
+            <li>Data structures (trees are graphs - binary, B, AVL, red-black etc.)</li>
+            <li>Also used in: graph databases, compilers, language processing, sociology, biology (DNA matching), scheduling, ...</li>
+          </ul>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h4>Finding shortest paths in graphs</h4>
+          <ul>
+            <li>Traffic navigation - TomTom, GPS etc.</li>
+            <li>AI pathfinding - robotics, drones, games (how to move NPC from point A to B)</li>
+            <li>Network routing - routing protocols used by routers</li>
+            <li>and many other uses</li>
+          </ul>
+        </section>
+        <section>
+          <p>Single source shortest paths (SSSP)</p>
+          <ul style="font-size: 0.75em;">
+            <li>Find shortest path from vertex A to all other vertices</li>
+            <li>Easy when edges have same length - BFS (breadth-first search)</li>
+            <li>(Slightly) harder with variable edge lengths - Dijkstra's algorithm</li>
+            <li>You should know this from ALG I/II and DIM</li>
+          </ul>
+        </section>
+        <section>
+          <p style="font-size: 0.8em;">Shortest path from A to F: length 20, vertices [A, C, E, D, F]</p>
+          <img class="stretch" style="background: white;" src="images/sssp.png" />
+          <p style="font-size: 0.8em;">D is a predecessor of F on the shortest path</p>
+          <p style="font-size: 0.8em;">E is a predecessor of D etc.</p>
+        </section>
+      </section>
+      <section>
+        <h5>BFS reminder (Python pseudocode)</h5>
+        <pre><code class="python" data-trim>
+          def BFS(graph, SRC, DEST):
+            put SRC into queue
+
+            while queue not empty:
+              V = get item from queue
+              for all neighbours N of V:
+                if N is not visited:
+                  put N into queue
+                  mark N as visited
+                  save somewhere that V is a predecessor of N
+
+            if DEST not visited, return NOT_FOUND
+            path = reconstruct predecessors from DEST to SRC
+            return reversed path
+        </code></pre>
+        <div style="font-size: 0.5em;">When a vertex is removed from the queue, a shortest path to it has been found.<br />
+          Therefore if it's the DEST vertex, you can stop the search.</div>
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+      ]
+    });
+  </script>
+</body>
+</html>
