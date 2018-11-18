@@ -47,10 +47,10 @@
           <h4>Socket</h4>
           <p>Abstraction of one endpoint of a comm. channel</p>
           <ul>
-            <li class="fragment"><b>bind(address, port)</b> - assigns socket to an address</li>
+            <li class="fragment"><b>bind((address, port))</b> - assigns socket to an address</li>
             <li class="fragment"><b>listen()</b> - starts listening for client connections</li>
             <li class="fragment"><b>accept()</b> - accept client connection</li>
-            <li class="fragment"><b>connect(address, port)</b> - connect to an address</li>
+            <li class="fragment"><b>connect((address, port))</b> - connect to an address</li>
             <li class="fragment"><b>sendall(data)</b> - send data</li>
             <li class="fragment"><b>recv(size)</b> - receive at most <b>size</b> bytes</li>
             <li class="fragment"><b>close()</b> - end the communication</li>
@@ -61,7 +61,7 @@
           <pre><code class="python" data-trim data-noescape>
             <span class="fragment">sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
             <span class="fragment">sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span>
-            <span class="fragment">sock.bind(('127.0.0.1', 5555)) # assign to address</span>
+            <span class="fragment">sock.bind(('127.0.0.1', 5555)) # assign to address, use ports > 1024</span>
             <span class="fragment">sock.listen() # start listening</span>
             <span class="fragment">client, addr = sock.accept() # accept client</span>
             <span class="fragment">client.sendall(b"hello")</span>
@@ -72,7 +72,7 @@
           <p>Client workflow</p>
           <pre><code class="python" data-trim data-noescape>
             <span class="fragment">client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span>
-            <span class="fragment">sock.connect(('127.0.0.1', 5555)) # connect to server</span>
+            <span class="fragment">client.connect(('127.0.0.1', 5555)) # connect to server</span>
             <span class="fragment">client.sendall(b"hello")</span>
             <span class="fragment">data = client.recv(512)</span>
             <span class="fragment">client.close() # close connection</span>
@@ -100,7 +100,7 @@
           <p>How to recognize disconnect</p>
           <pre><code class="python" data-trim data-noescape>
             data = sock.recv(512)
-            if data == 0:
+            if len(data) == 0:
               # error during transmission, disconnect
           </code></pre>
         </section>
