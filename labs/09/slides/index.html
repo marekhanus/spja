@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h3>Desktop GUI</h3>
+      </section>
+      <section>
+        <h4>How GUI applications work?</h4>
+        <p>GUI loop</p>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">while True:</span>
+            <span class="fragment"># are some keys pressed? has the mouse moved?
+            events = get_events(keys, mouse)
+            if events:
+              handle_events(events)</span>
+            <span class="fragment">else:
+              sleep()</span>
+        </code></pre>
+        <ul style="font-size: 0.6em;">
+          <li class="fragment">almost the same as in games</li>
+          <li class="fragment">GUI is only redrawn after an event happens (keyboard, mouse, network, timer, ...)</li>
+          <li class="fragment">without events the application sleeps</li>
+        </ul>
+      </section>
+      <section>
+        <section>
+          <h4>How is the UI designed?</h4>
+        <ul style="font-size: 0.5em;">
+          <li class="fragment">GUI apps are composed of a hierarchy of UI elements (called widgets, views, components, ...)</li>
+          <li class="fragment">Together they form a tree of widgets with parent/child relationships</li>
+          <li class="fragment">Composite design pattern</li>
+          <li class="fragment">Sometimes the hierarchy is specified with XML files or UI designer app</li>
+        </ul>
+        </section>
+        <section>
+          <h4>How the hierarchy looks in (pseudo)code?</h4>
+          <pre><code class="python" data-trim data-noescape>
+            window = Window()
+            row = Row()                   # widget container
+            row.add(Button("Click me!"))  # add widgets to container
+            row.add(Label("Hello world"))
+            window.add(row)
+          </code></pre>
+        </section>
+        <section>
+          <h4>Typical widgets</h4>
+          <img src="img/widgets.png" class="stretch" />
+          <ul>
+            <li>Button</li>
+            <li>Label</li>
+            <li>TextInput</li>
+            <li>Checkbox/Radio</li>
+            <li>ComboBox</li>
+            <li>...</li>
+          </ul>
+        </section>
+      </section>
+      <section>
+        <h4>User interaction</h4>
+        <ul style="font-size: 0.5em;">
+          <li class="fragment">callbacks (functions) are bound to specific events</li>
+          <li class="fragment">click on a button, typing a character into a textbox, mouse move, etc.</li>
+          <li class="fragment">when an event happens, control goes from the GUI loop to the callback</li>
+          <li class="fragment">the callback should NOT block, otherwise the whole UI will freeze</li>
+        </ul>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment">def on_button_click():
+            print("button was clicked")</span>
+
+          <span class="fragment">app = Window()
+          btn = Button("Click me!")
+          btn.onclick.set_callback(on_button_click)
+          app.add(btn)
+          app.mainloop()</span>
+        </code></pre>
+      </section>
+      <section>
+        <section>
+          <h4>GUI frameworks</h4>
+          <div>Functionality:</div>
+          <ul style="font-size: 0.6em;">
+            <li class="fragment">Window/dialog management (open, close, resize, ...)</li>
+            <li class="fragment">Input management (keyboard and mouse events)</li>
+            <li class="fragment">2D drawing (text, images, lines, rectangles, shadows, ...)</li>
+            <li class="fragment">Common widget implementation</li>
+            <li class="fragment">Should be multi-platform</li>
+            <li class="fragment">You don't want to implement this yourself</li>
+          </ul>
+        </section>
+        <section>
+          <h4>GUI frameworks</h4>
+          <ul style="font-size: 0.6em;">
+            <li><b>Qt</b> (C++, Python, cross-platform)</li>
+            <li>GTK (C++, Python, cross-platform)</li>
+            <li>WxWidgets (C++, Python, cross-platform)</li>
+            <li>Tcl/Tk (Python, Perl, Ruby, cross-platform)</li>
+            <li>WinForms/WPF (C#, Windows)</li>
+            <li>AWT/Swing/SWT/JavaFX (Java, cross-platform)</li>
+            <li>Cocoa (Objective C, OS X/iOS)</li>
+            <li>...</li>
+          </ul>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h4>Qt</h4>
+          <ul style="font-size: 0.8em;">
+            <li>multi-platform</li>
+            <li>C++, Python</li>
+            <li>easy to use, well designed</li>
+          </ul>
+          <p>Programs built with Qt:</p>
+          <ul style="font-size: 0.5em;">
+            <li class="fragment">Adobe Photoshop Album, Elements</li>
+            <li class="fragment">Autodesk Maya</li>
+            <li class="fragment">Battle.net client</li>
+            <li class="fragment">CryEngine editor</li>
+            <li class="fragment">EAGLE</li>
+            <li class="fragment">Google Earth</li>
+            <li class="fragment">Skype</li>
+            <li class="fragment">Source engine tools</li>
+            <li class="fragment">TeamSpeak</li>
+            <li class="fragment">TeamViewer</li>
+            <li class="fragment">VLC player</li>
+            <li class="fragment">and many others...</li>
+          </ul>
+        </section>
+        <section>
+          <ul style="font-size: 0.8em;">
+            <li>Qt has some licensing problems</li>
+            <li>we will use Qt 5 with Python binding PySide 2 (it's free)</li>
+          </ul>
+          <pre><code class="bash" data-trim data-noescape>
+            $ pip install pyside2
+          </code></pre>
+        </section>
+      </section>
+      <section>
+        <h4>Minimal Qt app</h4>
+        <pre><code class="python" data-trim data-noescape>
+          from PySide2.QtWidgets import QApplication, QPushButton
+
+          app = QApplication()
+          button = QPushButton("Hi!")
+          button.show()   # tells the button to be visible
+          app.exec_()     # start the GUI loop
+        </code></pre>
+      </section>
+      <section>
+        <h4>Layouts</h4>
+        <ul style="font-size: 0.6em;">
+          <li class="fragment">absolute positioning (place widget at pixel (113, 67)) doesn't scale</li>
+          <li class="fragment">when adding widgets to the hierarchy, you want them to be positioned automatically</li>
+          <li class="fragment">Qt has many automatic layouts: row, column, grid, etc.</li>
+        </ul>
+        <pre><code class="python" data-trim data-noescape>
+          <span class="fragment"># horizontal box (row), shortcut QHBoxLayout
+          layout = QBoxLayout(QBoxLayout.LeftToRight)</span><span class="fragment">
+          # vertical box (column), shortcut QVBoxLayout
+          # layout = QBoxLayout(QBoxLayout.TopToBottom)</span>
+
+          <span class="fragment">layout.addWidget(QPushButton("Btn 1"))
+          layout.addWidget(QPushButton("Btn 2"))</span>
+
+          <span class="fragment">window = QWidget()
+          window.setLayout(layout)
+          window.show()</span>
+        </code></pre>
+      </section>
+      <section>
+        <h4>Event handling</h4>
+        <ul style="font-size: 0.6em;" class="fragment">
+          <li>widgets have events (signals) that are connected to callbacks (slots)</li>
+        </ul>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          btn = QPushButton("Btn 1")
+          btn.clicked.connect(lambda event: print(event))
+        </code></pre>
+        <p class="fragment">Own events</p>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          <span class="fragment">class MyWidget(QWidget):
+            MyEvent = Signal(int, int)
+
+            def fn():
+              self.MyEvent.emit(1, 2)</span>
+
+          <span class="fragment">widget = MyWidget()
+          widget.MyEvent.connect(lambda x, y: print(x + y))
+          widget.fn()  # prints 3</span>
+        </code></pre>
+      </section>
+      <section>
+        <h4>UI refresh</h4>
+        <ul style="font-size: 0.6em;">
+          <li class="fragment">unlike in games, the UI is not refreshed X times per second</li>
+          <li class="fragment">when the app state changes, you have to manually redraw the changed (or all) widgets</li>
+        </ul>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          widget.repaint()  # redraw the widget
+        </code></pre>
+        <p class="fragment" style="font-size: 0.6em;">Observer pattern is very useful here, widgets listen to changes in the app state:</p>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          <span class="fragment">class LikeCountDisplay(QWidget):
+            def __init__(self, state):
+              state.on_change.set_listener(self.update)
+
+            def update(self):
+              self.label.setText(state.get_likes())</span>
+
+          <span class="fragment">
+          counter = LikeCounter(tweet)
+          widget = LikeCountDisplay(counter)
+          ...                   # sometime later
+          counter.add_like()    # widget is refreshed automatically</span>
+        </code></pre>
+      </section>
+      <section>
+        <h4>2D drawing</h4>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          class MyWidget(QWidget):
+            def paintEvent(self, *args, **kwargs):
+              painter = QPainter(self)
+
+              # pen is used for drawing (rectangle edges)
+              painter.setPen(QColor.fromRgb(255, 0, 0))
+              painter.drawRect(x1, y1, width, height)
+
+              # brush is used for filling (rectangle area)
+              painter.setBrush(QColor("red"))
+              painter.fillRect(x, y, width, height)
+        </code></pre>
+        <ul style="font-size: 0.6em;" class="fragment">
+          <li>often you need to change 2D drawing attributes (color, line width)</li>
+          <li>save/restore keeps the changes local so they don't affect the rest of the drawing code</li>
+          <li>ideal candidate for a context managet (<b>with</b> construct)</li>
+        </ul>
+        <pre class="fragment"><code class="python" data-trim data-noescape>
+          painter.save()    # save painter attributes to an internal stack
+          painter.setPen(QPen(QColor.fromRgb(255, 0, 0))) # set red pen
+          painter.drawLine(x1, y1, x2, y2)  # draw red line
+          painter.restore() # revert to the original state
+        </code></pre>
+      </section>
+      <section>
+        <section>
+          <h4>UI/logic separation</h4>
+          <p>What's wrong with this code?</p>
+          <pre class="fragment" data-fragment-index="0"><code class="python" data-trim data-noescape>
+            class GameBoard(QWidget): <span class="fragment" data-fragment-index="2">          # game logic is bound to UI</span>
+              def mousePressEvent(self, event): <span class="fragment" data-fragment-index="2"># input is bound to mouse</span>
+                x = event.x()
+                y = event.y()
+                cell = self.board[x][y]
+                if cell == Empty:
+                  self.board[x][y] = Cross
+                if self.check_win():
+                  print("game ended")
+
+              def check_win():
+                ...
+          </code></pre>
+          <p class="fragment" data-fragment-index="1">App (game) logic is combined with UI code!</p>
+        </section>
+        <section>
+          <p>This makes the game code hard to modify and test:</p>
+          <ul style="font-size: 0.8em;">
+            <li class="fragment">want to run game as a multiplayer server without UI? rewrite</li>
+            <li class="fragment">want to test the game code? rewrite</li>
+            <li class="fragment">want to support multiple UI outputs (console, web, desktop GUI)? rewrite</li>
+            <li class="fragment">want to change the GUI framework? rewrite</li>
+            <li class="fragment">want to change the game code? must touch the UI code</li>
+          </ul>
+        </section>
+        <section>
+          <p>Solution</p>
+          <ul style="font-size: 0.6em;">
+            <li>separate UI code and logic (domain) code</li>
+            <li>the game code should not know anything about the UI</li>
+            <li>dependency inversion - observer pattern again very useful</li>
+          </ul>
+          <pre class="fragment"><code class="python" data-trim data-noescape>
+            <span class="fragment">class Game: # in separate file, knows nothing about the UI
+              def move(self, x, y): pass
+              def set_on_move_listener(self, listener): pass</span>
+            <span class="fragment">
+            class GameBoard(QWidget):
+              def __init__(self, game):
+                self.game = game
+                self.game.set_on_move_listener(lambda: self.redraw())
+              def mousePressEvent(self, event):
+                x = event.x()
+                y = event.y()
+                self.game.move(x, y)
+                if self.game.check_win():
+                  print("game ended")</span>
+          </code></pre>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+      ]
+    });
+  </script>
+</body>
+</html>
